@@ -1,6 +1,7 @@
 class Rating < ActiveRecord::Base
   belongs_to :rateable, :polymorphic => true
   belongs_to :user
+
   validates_presence_of :score
   validates_uniqueness_of :user_id, :scope => [:rateable_id, :rateable_type, :category, :tag, :facet]
   validate :max_rating_allowed_by_parent
@@ -19,11 +20,7 @@ class Rating < ActiveRecord::Base
     end
   end
 
-  def rateable_options
-    rateable.ratings.options
-  end
-
   def max_rating
-    rateable_options[:max_rating]
+    rateable.class.acts_as_rateable_options[:max_rating]
   end
 end
