@@ -1,5 +1,4 @@
 module ActsAsRateable
-  module Extend
     def self.included(base)
       base.send(:extend, ClassMethods)
       base.send(:include, InstanceMethods)
@@ -55,6 +54,5 @@ module ActsAsRateable
         rating ? rating.score : nil
       end
     end # InstanceMethods
-  end
 end
 
