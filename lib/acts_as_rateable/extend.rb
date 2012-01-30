@@ -1,17 +1,22 @@
 module ActsAsRateable
   module Extend
     def self.included(base)
-      base.extend(ClassMethods)
+      base.send(:extend, ClassMethods)
+      base.send(:include, InstanceMethods)
+
+      base.class_eval do
+        has_many :ratings, :as => :rateable, :dependent => :delete_all
+        @acts_as_rateable_options = {:max_rating => 5}
+      end
     end
 
     module ClassMethods
       def acts_as_rateable(options = {})
-        options = {:max_rating => 5}.merge(options)
+        @acts_as_rateable_options.merge!(options)
+      end
 
-        has_many :ratings, :as => :rateable, :dependent => :delete_all
-        define_method(:acts_as_rateable_options) { options }
-
-        include ActsAsRateable::Extend::InstanceMethods
+      def acts_as_rateable_options
+        @acts_as_rateable_options
       end
     end
 
